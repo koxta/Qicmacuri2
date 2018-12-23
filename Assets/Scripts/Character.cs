@@ -7,6 +7,8 @@ public class Character : MonoBehaviour {
     public float speed;
     public float upForce;
 
+
+
     Animator animator;
     SpriteRenderer spriteRenderer;
 
@@ -22,15 +24,68 @@ public class Character : MonoBehaviour {
         animator = GetComponent<Animator>();
 	}
 
-   
+ 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(this.name == "RedDude" && collision.gameObject.tag == "dropable")
+        {
+            Counter.dropCount -= 1;
+        }
+        if(this.name == "BlueDude" && collision.gameObject.tag == "dropable")
+        {
+            Counter.dropCount -= 1;
+        }
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(this.name == "RedDude" && collision.gameObject.tag == "dropable")
+        {
+            Counter.dropCount += 1;
+        }
+        if(this.name == "BlueDude" && collision.gameObject.tag == "dropable")
+        {
+            Counter.dropCount += 1;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.name=="door")
+        if(collision.name== "MOG_Trigger")
         {
-          //  Transpose();
+            if(!Counter.MOG_Dialog)
+            {
+                Counter.MOG_Dialog = true;
+                ShowMogDialog();
+            }
+        }
+
+        Vector3 newMetro = new Vector3(132.87f,10.6f,0);
+
+        if(collision.name=="MetroTrigger")
+        {
+            if(this.name=="RedDude")
+            {
+                transform.position = newMetro;
+                GameObject.Find("BlueDude").transform.position = newMetro;
+            }
+            if(this.name=="BlueDude")
+            {
+                transform.position = newMetro;
+                GameObject.Find("RedDude").transform.position = newMetro;
+            }
         }
     }
+
+
+    private void ShowMogDialog()
+    {
+        Debug.Log("d");
+    }
+
+
+
 
     void Update () {
         Vector3 move =new Vector3(Input.GetAxis("Horizontal"),0, 0);

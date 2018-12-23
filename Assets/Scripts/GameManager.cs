@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    public GameObject[] dropableArr;
 
     public GameObject FirstGameObject;
     public GameObject SecondGameObject;
@@ -15,9 +16,13 @@ public class GameManager : MonoBehaviour {
 
     private void Start()
     {
+
+
+
         c1 = FirstGameObject.GetComponent<Character>();
         c2 = SecondGameObject.GetComponent<Character>();
 
+        Physics2D.IgnoreCollision(FirstGameObject.GetComponent<Collider2D>(), SecondGameObject.GetComponent<Collider2D>(), true);
         //////////////////////////////////////////////
 
         camera1.enabled = true;
@@ -25,6 +30,16 @@ public class GameManager : MonoBehaviour {
 
         c1.enabled = true;
         c2.enabled = false;
+
+        /////
+        ///
+
+
+
+
+
+
+
     }
 
 
@@ -37,7 +52,12 @@ public class GameManager : MonoBehaviour {
         {
             FocusToSecond();
         }
-	}
+
+
+        if(Counter.dropCount == 2) Collapse();
+       
+
+    }
 
 
     private void FocusToBoth()
@@ -48,9 +68,6 @@ public class GameManager : MonoBehaviour {
 
     public void FocusToSecond()
     {
-        
-
-
         if(c1.enabled&&c2.enabled)
         {
             c1.enabled = true;
@@ -67,8 +84,38 @@ public class GameManager : MonoBehaviour {
             camera1.enabled = !camera1.enabled;
             camera2.enabled = !camera2.enabled;
         }
-
-        
     }
-    
+
+    public GameObject drop;
+    private void Collapse()
+    {
+        GameObject.Destroy(drop);
+
+        for(int i=0;i<7;i++)
+        {
+            dropableArr[i].AddComponent<Rigidbody2D>();
+        }
+
+        StartCoroutine(destDropables());
+
+
+        camera1.backgroundColor = ConvertColor(84, 78, 78);
+        camera2.backgroundColor = ConvertColor(84, 78, 78);
+    }
+
+    private Color ConvertColor(int r, int g, int b)
+    {
+        return new Color(r / 255.0f, g / 255.0f, b / 255.0f);
+    }
+
+    private IEnumerator destDropables()
+    {
+        yield return new WaitForSeconds(1);
+
+        for(int i = 0; i < 7; i++)
+        {
+            Destroy(dropableArr[i]);
+        }
+    }
+
 }
