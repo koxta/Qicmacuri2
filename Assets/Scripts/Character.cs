@@ -7,6 +7,8 @@ public class Character : MonoBehaviour {
     public float speed;
     public float upForce;
 
+    public Dialogue dialogue;
+
 
 
     Animator animator;
@@ -52,6 +54,12 @@ public class Character : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
+        if(collision.name == "BoxCollider")
+        {
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        }
+
         if(collision.name== "MOG_Trigger")
         {
             if(!Counter.MOG_Dialog)
